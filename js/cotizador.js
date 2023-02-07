@@ -98,6 +98,7 @@ const mostrarCarrito = () => {
 
 // Comprar!
 
+
 if (procesarCompra) {
   procesarCompra.addEventListener("click", () => {
     if (carrito.length === 0) {
