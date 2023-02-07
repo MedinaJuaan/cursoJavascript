@@ -1,3 +1,9 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 .imagen{
     max-width:100%;
 }
@@ -28,13 +34,23 @@ body{
     font-weight: 900;
     font-style: italic;
 }
-#precioTotal{
-    margin:0;
-    padding:0;
-}
+
 a{
     text-decoration: none;
 }
 .boton{
     opacity:0;
 }
+.mensaje {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    transform: translate(-50%, -50%);
+    background-color: lightgreen;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+  }

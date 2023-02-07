@@ -1,8 +1,10 @@
-let carrito = [];
 const contenedor = document.querySelector("#contenedor");
 const carritoContenedor = document.querySelector("#carritoContenedor");
 const vaciarCarrito = document.querySelector("#vaciarCarrito");
 const procesarCompra = document.querySelector("#procesarCompra");
+
+
+// Traer datos de JSON y crear las tarjetas de productos
 
 fetch("./data/data.json")
   .then((res) => res.json())
@@ -24,54 +26,21 @@ fetch("./data/data.json")
       }
     });
   });
-document.addEventListener("DOMContentLoaded", () => {
-  carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-  mostrarCarrito();
-});
 
-if (vaciarCarrito) {
-  vaciarCarrito.addEventListener("click", () => {
-    carrito.length = [];
-    mostrarCarrito();
-  });
-}
-
-if (procesarCompra) {
-  procesarCompra.addEventListener("click", () => {
-    if (carrito.length === 0) {
-      Swal.fire({
-        title: "¡Tu carrito está vacio!",
-        text: "Agrega productos para continuar con la cotizacion",
-        icon: "error",
-        confirmButtonText: "Aceptar",
-      });
-    } else {
-      const total = carrito.reduce(
-        (acc, prod) => acc + prod.cantidad * prod.precio,
-        0
-      );
-      Swal.fire({
-        title: "Gracias por elegirnos",
-        text: `Tu cotizacion total es de $${total}`,
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
-    }
-    setTimeout(() => {
-      localStorage.removeItem("carrito");
-      location.reload();
-    }, 5000);
-  });
-}
-
-let data = [];
+// Crear objetos desde el JSON para poder usarlos despues
 
 fetch("./data/data.json")
   .then((res) => res.json())
   .then((productos) => {
     data = productos;
   });
+
+
+  // Establecer array vacia para agregar los productos al carrito
+
+  let data = [];
+
 const agregarProducto = (id) => {
   const existe = carrito.some((prod) => prod.id === id);
 
@@ -85,8 +54,13 @@ const agregarProducto = (id) => {
     const item = data.find((prod) => prod.id === id);
     carrito.push(item);
   }
+  mensaje();
+
   mostrarCarrito();
 };
+
+
+// Mostrar productos agregados en el carrito de compras desplegable
 
 const mostrarCarrito = () => {
   const modalBody = document.querySelector(".modal .modal-body");
@@ -120,12 +94,73 @@ const mostrarCarrito = () => {
   guardarStorage();
 };
 
-function guardarStorage() {
-  localStorage.setItem("carrito", JSON.stringify(carrito));
+
+
+// Comprar!
+
+if (procesarCompra) {
+  procesarCompra.addEventListener("click", () => {
+    if (carrito.length === 0) {
+      Swal.fire({
+        title: "¡Tu carrito está vacio!",
+        text: "Agrega productos para continuar con la cotizacion",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
+    } else {
+      const total = carrito.reduce(
+        (acc, prod) => acc + prod.cantidad * prod.precio,
+        0
+        );
+        Swal.fire({
+          title: "Gracias por elegirnos",
+          text: `Tu cotizacion total es de $${total}`,
+          icon: "success",
+          confirmButtonText: "Aceptar",
+        });
+      }
+      setTimeout(() => {
+        localStorage.removeItem("carrito");
+        location.reload();
+      }, 5000);
+    });
+  }
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  
+    mostrarCarrito();
+  });
+  
+  // Vaciar carrito
+
+if (vaciarCarrito) {
+  vaciarCarrito.addEventListener("click", () => {
+    carrito.length = [];
+    mostrarCarrito();
+  });
 }
+
+  // Guardar en storage
+
+  function guardarStorage() {
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+  }
+
+  // Eliminar productos
 
 function eliminarProducto(id) {
   const productoId = id;
   carrito = carrito.filter((producto) => producto.id !== productoId);
   mostrarCarrito();
+}
+
+// Mensaje al agregar productos que se sale solo
+
+function mensaje() {
+  document.querySelector(".mensaje").style.display = "block";
+
+  setTimeout(function() {
+    document.querySelector(".mensaje").style.display = "none";
+  }, 500);
 }
